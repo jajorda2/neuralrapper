@@ -3,8 +3,6 @@ This is a simple neural net using keras and tensorflow back end to train using a
 
 Upon training, the tool generates lyrics word-by-word.
 
-Quartz did a really nice profile on me and the program here; https://qz.com/920091/a-west-virginia-teen-taught-himself-how-to-build-a-rapping-ai-using-kanye-west-lyrics/
-
 ## Setup
 
 Install (with python 2.x--currently working to update code based on python 3.x)
