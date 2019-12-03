@@ -17,7 +17,7 @@ You may need to add the --user flag at the end.
 
 ### Data preperation
 
-Guide to using your own lyrics with `lyrics.txt`
+Guide to using your own lyrics with `lyrics.txt`. The sample lyrics are 3 songs from eminem.
 
 * Avoid including things like "[bridge]" or "[intro]" 
 
