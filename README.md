@@ -15,15 +15,44 @@ You may need to add the --user flag at the end.
 
 ### Data preperation
 
-Guide to using your own lyrics with `lyrics.txt`. The sample lyrics are 3 songs from eminem.
+Guide to using your own lyrics with `lyrics.txt`.
+
+#### Scraping your own lyrics
+
+* Use NPM (if not installed, see https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/)
+
+        npm install lyrics-corpus -g
+
+* Fetch Songs (this will fetch 10 songs by eminem in separate txt files:
+        
+        create-corpus "eminem" 10
+        
+* Navigate to the newly created directory
+
+        cd eminem
+        
+* Now we need to combine all the text files into one file. To do this, create a .py (name it anything like "concatenate.py") file in the same directory with the following
+
+        import glob
+
+        read_files = glob.glob("*.txt")
+
+        with open("lyrics.txt", "wb") as outfile:
+            for f in read_files:
+                with open(f, "rb") as infile:
+                    outfile.write(infile.read())
+
+* Execute the concatenate.py file
+
+* You should now have a file called "lyrics.txt"
+
+* Copy "lyrics.txt" into the neuralrapper directory
 
 * Avoid including things like "[bridge]" or "[intro]" 
 
 * Seperate each line by a newline
 
 * Avoid non alphanumeric characters (besides basic punctuation)
-
-* You don't have to retype everything - just copy and paste from some lyrics website
 
 ### Training
 
