@@ -12,7 +12,7 @@ from keras.layers.core import Dense
 depth = 4 # depth of the network. changing will require a retrain
 maxsyllables = 16 # maximum syllables per line. Change this freely without retraining the network
 train_mode = False
-artist = "kanye_west" # used when saving the trained model
+artist = "eminem" # used when saving the trained model
 rap_file = "neural_rap.txt" # where the rap is written to
 
 def create_network(depth):
@@ -37,7 +37,7 @@ def markov(text_file):
 
 def syllables(line):
 	count = 0
-	for word in line.split(" "):
+	for word in line.split():
 		vowels = 'aeiouy'
 		word = word.lower().strip(".:;?!")
 		if word[0] in vowels:
@@ -59,7 +59,7 @@ def rhymeindex(lyrics):
 		return open(str(artist) + ".rhymes", "r").read().split("\n")
 	else:
 		rhyme_master_list = []
-		print "Alright, building the list of all the rhymes"
+		print "Hol' up. This gon' take a sec...maybe, like, 5-10min actually"
 		for i in lyrics:
 			word = re.sub(r"\W+", '', i.split(" ")[-1]).lower()
 			rhymeslist = pronouncing.rhymes(word)
@@ -191,7 +191,7 @@ def compose_rap(lines, rhyme_list, lyrics_file, model):
 	
 def vectors_into_song(vectors, generated_lyrics, rhyme_list):
 	print "\n\n"	
-	print "About to write rap (this could take a moment)..."
+	print "Spittin lyrics (hol' up)..."
 	print "\n\n"
 	def last_word_compare(rap, line2):
 		penalty = 0 
