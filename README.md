@@ -23,7 +23,7 @@ Guide to using your own lyrics with `lyrics.txt`.
 
         npm install lyrics-corpus -g
 
-* Fetch Songs (this will fetch 10 songs by eminem in separate txt files:
+* Fetch Songs (this will fetch 10 songs by eminem in separate txt files):
         
         create-corpus "eminem" 10
         
@@ -43,6 +43,8 @@ Guide to using your own lyrics with `lyrics.txt`.
                     outfile.write(infile.read())
 
 * Execute the concatenate.py file
+
+        python concatenate.py
 
 * You should now have a file called "lyrics.txt"
 
@@ -72,4 +74,4 @@ Guide to using your own lyrics with `lyrics.txt`.
 
 ### Performing raps
 
-* speech.py will "rap" the generated songs with a text to speech over a generic rap beat (`beat.mp3`), just run `python speech.py`
+* In progress
