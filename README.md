@@ -5,6 +5,8 @@ Upon training, the tool generates lyrics word-by-word.
 
 * I'm calling this      neuralrapper        but it works with any genre really and can even be used with poetry applications (maybe I'll do one with William Blake!)
 
+* Some of the code is based on https://github.com/robbiebarrat/rapping-neural-network from a few years ago, but includes automated lyrics capture and data cleaning methods
+
 ## Setup
 
 Install (with python 2.x--currently working to update code based on python 3.x)
