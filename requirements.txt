@@ -2,6 +2,6 @@ pronouncing==0.1.2
 pyttsx==1.1
 markovify==0.5.4
 Keras==2.0.8
-tensorflow==1.4.1
+tensorflow==1.12.2
 numpy==1.13.0
 h5py
