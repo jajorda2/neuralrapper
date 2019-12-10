@@ -6,7 +6,6 @@ import numpy as np
 import os
 import codecs
 import keras
-import h5py
 import datetime
 from keras.models import Sequential
 from keras.layers import LSTM 
@@ -14,7 +13,7 @@ from keras.layers.core import Dense
 
 depth = 6 # depth of the network. changing will require a retrain
 maxsyllables = 32 # maximum syllables per line. Change this freely without retraining the network
-train_mode = True
+train_mode = False
 artist = "Snoop" # used when saving the trained model
 rap_file = "SnoopDog.txt" # where the rap is written to
 
@@ -90,7 +89,6 @@ def rhymeindex(lyrics):
 def rhyme(line, rhyme_list):
 	word = re.sub(r"\W+", '', line.split(" ")[-1]).lower()
 	rhymeslist = pronouncing.rhymes(word)
-	rhymeslist = [x.encode('UTF8') for x in rhymeslist]
 	rhymeslistends = []
 	for i in rhymeslist:
 		rhymeslistends.append(i[-2:])
@@ -277,7 +275,7 @@ def train(x_data, y_data, model):
 			  
 def main(depth, train_mode):
 	model = create_network(depth)
-	text_file = "lyrics.txt"
+	text_file = "lyricsclean.txt"
 	text_model = markov(text_file)
 	
 	if train_mode == True:
