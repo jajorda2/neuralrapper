@@ -6,6 +6,7 @@ import numpy as np
 import os
 import codecs
 import keras
+import h5py
 import datetime
 from keras.models import Sequential
 from keras.layers import LSTM 
