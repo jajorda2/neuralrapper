@@ -57,14 +57,14 @@ def syllables(line):
 
 def rhymeindex(lyrics):
 	if str(artist) + ".rhymes" in os.listdir(".") and train_mode == False:
-		print("loading saved rhymes from " + str(artist) + ".rhymes")
-		return open(str(artist) + ".rhymes", "r").read().split("\n")
+		print ("loading saved rhymes from " + str(artist) + ".rhymes" )
+		return open(str(artist) + ".rhymes", "r", encoding="utf-8").read().split("\n")
 	else:
 		rhyme_master_list = []
-		print("Building in 3.. 2.. 1..")
+		print ("Alright, building the list of all the rhymes" )
 		for i in lyrics:
 			word = re.sub(r"\W+", '', i.split(" ")[-1]).lower()
-			rhymeslist = pronouncing.rhymes(word)
+			rhymeslist = rhymes(word)
 			rhymeslistends = []
 			for i in rhymeslist:
 				rhymeslistends.append(i[-2:])
@@ -72,18 +72,15 @@ def rhymeindex(lyrics):
 				rhymescheme = max(set(rhymeslistends), key=rhymeslistends.count)
 			except Exception:
 				rhymescheme = word[-2:]
+			print("===> rhymescheme : ",rhymescheme)
 			rhyme_master_list.append(rhymescheme)
 		rhyme_master_list = list(set(rhyme_master_list))
+		rhymelist = sorting_rhyme(rhyme_master_list)
 
-		reverselist = [x[::-1] for x in rhyme_master_list]
-		reverselist = sorted(reverselist)
-		
-		rhymelist = [x[::-1] for x in reverselist]
-
-		f = open(str(artist) + ".rhymes", "w")
+		f = open(str(artist) + ".rhymes", "w",encoding='utf-8')
 		f.write("\n".join(rhymelist))
 		f.close()
-		print(rhymelist)
+		print (rhymelist)
 		return rhymelist
 
 def rhyme(line, rhyme_list):
@@ -96,12 +93,13 @@ def rhyme(line, rhyme_list):
 		rhymescheme = max(set(rhymeslistends), key=rhymeslistends.count)
 	except Exception:
 		rhymescheme = word[-2:]
+	print("rhymescheme = ",rhymescheme)
 	try:
 		float_rhyme = rhyme_list.index(rhymescheme)
-		float_rhyme = float_rhyme / float(len(rhyme_list))
-		return float_rhyme
 	except Exception:
-		return None
+		float_rhyme = nonefinding(rhymescheme,rhyme_list)
+	float_rhyme = float_rhyme / float(len(rhyme_list))
+	return float_rhyme
 
 
 def split_lyrics_file(text_file):
