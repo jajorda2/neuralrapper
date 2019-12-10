@@ -13,7 +13,7 @@ from keras.layers.core import Dense
 
 depth = 6 # depth of the network. changing will require a retrain
 maxsyllables = 32 # maximum syllables per line. Change this freely without retraining the network
-train_mode = False
+train_mode = True
 artist = "Snoop" # used when saving the trained model
 rap_file = "SnoopDog.txt" # where the rap is written to
 
@@ -103,7 +103,7 @@ def rhyme(line, rhyme_list):
 
 
 def split_lyrics_file(text_file):
-	text = open(text_file).read()
+	text = open(text_file,"r",encoding='utf-8').read()
 	text = text.split("\n")
 	while "" in text:
 		text.remove("")
@@ -113,15 +113,17 @@ def split_lyrics_file(text_file):
 def generate_lyrics(text_model, text_file):
 	bars = []
 	last_words = []
-	lyriclength = len(open(text_file).read().split("\n"))
+	lyriclength = len(open(text_file,"r",encoding='utf-8').read().split("\n"))
 	count = 0
 	markov_model = markov(text_file)
 	
 	while len(bars) < lyriclength / 9 and count < lyriclength * 2:
 		bar = markov_model.make_sentence()
+		print(bar)
+		if type(bar) != type(None):
+			print(chars(bar))
+		if type(bar) != type(None) and chars(bar) < 1:
 
-		if type(bar) != type(None) and syllables(bar) < 1:
-			
 			def get_last_word(bar):
 				last_word = bar.split(" ")[-1]
 				if last_word[-1] in "!.?,":
@@ -132,7 +134,7 @@ def generate_lyrics(text_model, text_file):
 			if bar not in bars and last_words.count(last_word) < 3:
 				bars.append(bar)
 				last_words.append(last_word)
-				count += 1
+				count += 1		
 	return bars
 
 def build_dataset(lines, rhyme_list):
@@ -164,8 +166,8 @@ def build_dataset(lines, rhyme_list):
 	x_data = np.array(x_data)
 	y_data = np.array(y_data)
 	
-	#print "x shape " + str(x_data.shape)
-	#print "y shape " + str(y_data.shape)
+	print ("x shape " + str(x_data.shape))
+	print ("y shape " + str(y_data.shape))
 	return x_data, y_data
 	
 def compose_rap(lines, rhyme_list, lyrics_file, model):
@@ -189,7 +191,7 @@ def compose_rap(lines, rhyme_list, lyrics_file, model):
 	
 def vectors_into_song(vectors, generated_lyrics, rhyme_list):
 	print("\n\n")	
-	print("About to write rap (this could take a moment)...")
+	print("Spittin' lines (this could take a moment)...")
 	print("\n\n")
 	def last_word_compare(rap, line2):
 		penalty = 0 
