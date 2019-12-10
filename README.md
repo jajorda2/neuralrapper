@@ -56,6 +56,16 @@ Guide to using your own lyrics with `lyrics.txt`.
 
 * Avoid non alphanumeric characters (besides basic punctuation)
 
+* There's an included script to do this. See next:
+
+#### Removing stuff from lyrics.txt that causes string errors
+
+* Run 
+
+        python nonalpha.py
+
+* The output will be "lyricsclean.txt" which already works with model.py
+
 ### Training
 
 * In `model.py`, change the variable `artist` to the name of the new artist you've used in `lyrics.txt`
@@ -71,7 +81,3 @@ Guide to using your own lyrics with `lyrics.txt`.
 * Run the program with `python model.py`
 
 * The rap will be written to the output of your terminal, and also to a file called `neural_rap.txt`
-
-### Performing raps
-
-* In progress
