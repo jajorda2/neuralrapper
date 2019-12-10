@@ -33,7 +33,7 @@ def create_network(depth):
 	return model
 
 def markov(text_file):
-	read = open("lyrics.txt", "r").read()
+	read = open("lyricsclean.txt", "r").read()
 	text_model = markovify.NewlineText(read)
 	return text_model
 
