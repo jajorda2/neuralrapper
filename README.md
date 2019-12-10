@@ -11,9 +11,10 @@ Upon training, the tool generates lyrics word-by-word.
 
 Install THIS HAS BEEN PORTED TO PYTHON = 3
 
+    sudo apt-get install libhdf5-dev
+
     pip3 install -r requirements.txt 
 
-You may need to add the --user flag at the end.
 
 ## Usage
 
