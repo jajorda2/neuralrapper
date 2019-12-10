@@ -9,9 +9,9 @@ Upon training, the tool generates lyrics word-by-word.
 
 ## Setup
 
-Install (with python 2.x--currently working to update code based on python 3.x)
+Install THIS HAS BEEN PORTED TO PYTHON = 3
 
-    pip install -U -r requirements.txt 
+    pip3 install -r requirements.txt 
 
 You may need to add the --user flag at the end.
 
