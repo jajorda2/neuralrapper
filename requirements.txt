@@ -4,3 +4,4 @@ markovify==0.5.4
 Keras==2.0.8
 tensorflow==1.4.1
 numpy==1.13.0
+h5py
