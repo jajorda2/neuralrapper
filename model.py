@@ -4,16 +4,18 @@ import re
 import random
 import numpy as np
 import os
+import codecs
 import keras
+import datetime
 from keras.models import Sequential
 from keras.layers import LSTM 
 from keras.layers.core import Dense
 
-depth = 4 # depth of the network. changing will require a retrain
-maxsyllables = 16 # maximum syllables per line. Change this freely without retraining the network
-train_mode = False
-artist = "eminem" # used when saving the trained model
-rap_file = "neural_rap.txt" # where the rap is written to
+depth = 6 # depth of the network. changing will require a retrain
+maxsyllables = 32 # maximum syllables per line. Change this freely without retraining the network
+train_mode = True
+artist = "Snoop" # used when saving the trained model
+rap_file = "SnoopDog.txt" # where the rap is written to
 
 def create_network(depth):
 	model = Sequential()
@@ -31,7 +33,7 @@ def create_network(depth):
 	return model
 
 def markov(text_file):
-	read = open(text_file, "r").read()
+	read = open("lyrics.txt", "r").read()
 	text_model = markovify.NewlineText(read)
 	return text_model
 
@@ -39,18 +41,18 @@ def syllables(line):
 	count = 0
 	for word in line.split():
 		vowels = 'aeiouy'
-		word = word.lower().strip(".:;?!")
+		word = word.lower().strip("[],.:;?!")
 		if word[0] in vowels:
-			count +=1
-		for index in range(1,len(word)):
-			if word[index] in vowels and word[index-1] not in vowels:
-				count +=1
+			count += 1
+		for index in range(1, len(word)):
+			if word[index] in vowels and word[index - 1] not in vowels:
+				count += 1
 		if word.endswith('e'):
 			count -= 1
 		if word.endswith('le'):
-			count+=1
+			count += 1
 		if count == 0:
-			count +=1
+			count += 1
 	return count / maxsyllables
 
 def rhymeindex(lyrics):
@@ -59,7 +61,7 @@ def rhymeindex(lyrics):
 		return open(str(artist) + ".rhymes", "r").read().split("\n")
 	else:
 		rhyme_master_list = []
-		print "Hol' up. This gon' take a sec...maybe, like, 5-10min actually"
+		print "Building in 3.. 2.. 1.."
 		for i in lyrics:
 			word = re.sub(r"\W+", '', i.split(" ")[-1]).lower()
 			rhymeslist = pronouncing.rhymes(word)
@@ -191,7 +193,7 @@ def compose_rap(lines, rhyme_list, lyrics_file, model):
 	
 def vectors_into_song(vectors, generated_lyrics, rhyme_list):
 	print "\n\n"	
-	print "Spittin lyrics (hol' up)..."
+	print "About to write rap (this could take a moment)..."
 	print "\n\n"
 	def last_word_compare(rap, line2):
 		penalty = 0 
