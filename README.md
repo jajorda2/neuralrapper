@@ -49,7 +49,7 @@ Guide to using your own lyrics with `lyrics.txt`.
 
 * Execute the concatenate.py file
 
-        python concatenate.py
+        python3 concatenate.py
 
 * You should now have a file called "lyrics.txt"
 
@@ -67,7 +67,7 @@ Guide to using your own lyrics with `lyrics.txt`.
 
 * Run 
 
-        python nonalpha.py
+        python3 nonalpha.py
 
 * The output will be "lyricsclean.txt" which already works with model.py
 
@@ -77,12 +77,12 @@ Guide to using your own lyrics with `lyrics.txt`.
 
 * In `model.py`, change the variable `train_mode` to `True`
 
-* Run the program with `python model.py`, and allow training to finish.
+* Run the program with `python3 model.py`, and allow training to finish.
 
 ### Generating raps
 
 * In `model.py`, if you've trained a new network, the variable `train_mode` will be `True`, set this back to `False`
 
-* Run the program with `python model.py`
+* Run the program with `python3 model.py`
 
 * The rap will be written to the output of your terminal, and also to a file called `neural_rap.txt`
