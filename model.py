@@ -4,18 +4,16 @@ import re
 import random
 import numpy as np
 import os
-import codecs
 import keras
-import datetime
 from keras.models import Sequential
 from keras.layers import LSTM 
 from keras.layers.core import Dense
 
 depth = 6 # depth of the network. changing will require a retrain
 maxsyllables = 32 # maximum syllables per line. Change this freely without retraining the network
-train_mode = True
-artist = "Snoop" # used when saving the trained model
-rap_file = "SnoopDog.txt" # where the rap is written to
+train_mode = False
+artist = "snoopdog" # used when saving the trained model
+rap_file = "neural_rap.txt" # where the rap is written to
 
 def create_network(depth):
 	model = Sequential()
@@ -33,7 +31,7 @@ def create_network(depth):
 	return model
 
 def markov(text_file):
-	read = open("lyricsclean.txt", "r").read()
+	read = open(text_file, "r").read()
 	text_model = markovify.NewlineText(read)
 	return text_model
 
@@ -41,30 +39,31 @@ def syllables(line):
 	count = 0
 	for word in line.split():
 		vowels = 'aeiouy'
-		word = word.lower().strip("[],.:;?!")
+		word = word.lower().strip(".:;?!")
 		if word[0] in vowels:
-			count += 1
-		for index in range(1, len(word)):
-			if word[index] in vowels and word[index - 1] not in vowels:
-				count += 1
+			count +=1
+		for index in range(1,len(word)):
+			if word[index] in vowels and word[index-1] not in vowels:
+				count +=1
 		if word.endswith('e'):
 			count -= 1
 		if word.endswith('le'):
-			count += 1
+			count+=1
 		if count == 0:
-			count += 1
+			count +=1
 	return count / maxsyllables
 
 def rhymeindex(lyrics):
 	if str(artist) + ".rhymes" in os.listdir(".") and train_mode == False:
-		print ("loading saved rhymes from " + str(artist) + ".rhymes" )
-		return open(str(artist) + ".rhymes", "r", encoding="utf-8").read().split("\n")
+		print("loading saved rhymes from " + str(artist) + ".rhymes")
+		return open(str(artist) + ".rhymes", "r").read().split("\n")
 	else:
 		rhyme_master_list = []
-		print ("Alright, building the list of all the rhymes" )
+		print("Alright, building the list of all the rhymes")
 		for i in lyrics:
 			word = re.sub(r"\W+", '', i.split(" ")[-1]).lower()
 			rhymeslist = pronouncing.rhymes(word)
+			#rhymeslist = [x.encode('UTF8') for x in rhymeslist]
 			rhymeslistends = []
 			for i in rhymeslist:
 				rhymeslistends.append(i[-2:])
@@ -72,12 +71,15 @@ def rhymeindex(lyrics):
 				rhymescheme = max(set(rhymeslistends), key=rhymeslistends.count)
 			except Exception:
 				rhymescheme = word[-2:]
-			print("===> rhymescheme : ",rhymescheme)
 			rhyme_master_list.append(rhymescheme)
 		rhyme_master_list = list(set(rhyme_master_list))
-		rhymelist = sorting_rhyme(rhyme_master_list)
 
-		f = open(str(artist) + ".rhymes", "w",encoding='utf-8')
+		reverselist = [x[::-1] for x in rhyme_master_list]
+		reverselist = sorted(reverselist)
+		
+		rhymelist = [x[::-1] for x in reverselist]
+
+		f = open(str(artist) + ".rhymes", "w")
 		f.write("\n".join(rhymelist))
 		f.close()
 		print (rhymelist)
@@ -86,6 +88,7 @@ def rhymeindex(lyrics):
 def rhyme(line, rhyme_list):
 	word = re.sub(r"\W+", '', line.split(" ")[-1]).lower()
 	rhymeslist = pronouncing.rhymes(word)
+	#rhymeslist = [x.encode('UTF8') for x in rhymeslist]
 	rhymeslistends = []
 	for i in rhymeslist:
 		rhymeslistends.append(i[-2:])
@@ -93,17 +96,16 @@ def rhyme(line, rhyme_list):
 		rhymescheme = max(set(rhymeslistends), key=rhymeslistends.count)
 	except Exception:
 		rhymescheme = word[-2:]
-	print("rhymescheme = ",rhymescheme)
 	try:
 		float_rhyme = rhyme_list.index(rhymescheme)
+		float_rhyme = float_rhyme / float(len(rhyme_list))
+		return float_rhyme
 	except Exception:
-		float_rhyme = nonefinding(rhymescheme,rhyme_list)
-	float_rhyme = float_rhyme / float(len(rhyme_list))
-	return float_rhyme
+		return None
 
 
 def split_lyrics_file(text_file):
-	text = open(text_file,"r",encoding='utf-8').read()
+	text = open(text_file).read()
 	text = text.split("\n")
 	while "" in text:
 		text.remove("")
@@ -113,17 +115,15 @@ def split_lyrics_file(text_file):
 def generate_lyrics(text_model, text_file):
 	bars = []
 	last_words = []
-	lyriclength = len(open(text_file,"r",encoding='utf-8').read().split("\n"))
+	lyriclength = len(open(text_file).read().split("\n"))
 	count = 0
 	markov_model = markov(text_file)
 	
 	while len(bars) < lyriclength / 9 and count < lyriclength * 2:
 		bar = markov_model.make_sentence()
-		print(bar)
-		if type(bar) != type(None):
-			print(chars(bar))
-		if type(bar) != type(None) and chars(bar) < 1:
 
+		if type(bar) != type(None) and syllables(bar) < 1:
+			
 			def get_last_word(bar):
 				last_word = bar.split(" ")[-1]
 				if last_word[-1] in "!.?,":
@@ -134,7 +134,7 @@ def generate_lyrics(text_model, text_file):
 			if bar not in bars and last_words.count(last_word) < 3:
 				bars.append(bar)
 				last_words.append(last_word)
-				count += 1		
+				count += 1
 	return bars
 
 def build_dataset(lines, rhyme_list):
@@ -166,15 +166,15 @@ def build_dataset(lines, rhyme_list):
 	x_data = np.array(x_data)
 	y_data = np.array(y_data)
 	
-	print ("x shape " + str(x_data.shape))
-	print ("y shape " + str(y_data.shape))
+	#print "x shape " + str(x_data.shape)
+	#print "y shape " + str(y_data.shape)
 	return x_data, y_data
 	
 def compose_rap(lines, rhyme_list, lyrics_file, model):
 	rap_vectors = []
 	human_lyrics = split_lyrics_file(lyrics_file)
 	
-	initial_index = random.choice(list(range(len(human_lyrics) - 1)))
+	initial_index = random.choice(range(len(human_lyrics) - 1))
 	initial_lines = human_lyrics[initial_index:initial_index + 2]
 	
 	starting_input = []
@@ -190,9 +190,9 @@ def compose_rap(lines, rhyme_list, lyrics_file, model):
 	return rap_vectors
 	
 def vectors_into_song(vectors, generated_lyrics, rhyme_list):
-	print("\n\n")	
-	print("Spittin' lines (this could take a moment)...")
-	print("\n\n")
+	print ("\n\n")	
+	print ("Here goes nothing......")
+	print ("\n\n")
 	def last_word_compare(rap, line2):
 		penalty = 0 
 		for line1 in rap:
@@ -257,7 +257,7 @@ def vectors_into_song(vectors, generated_lyrics, rhyme_list):
 		for item in scorelist:
 			if item[1] == max_score:
 				rap.append(item[0])
-				print(str(item[0]))
+				print (str(item[0]))
 				
 				for i in dataset:
 					if item[0] == i[0]:
