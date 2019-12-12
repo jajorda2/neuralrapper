@@ -10,7 +10,7 @@ from keras.layers import LSTM
 from keras.layers.core import Dense
 
 depth = 6 # depth of the network. changing will require a retrain
-maxsyllables = 32 # maximum syllables per line. Change this freely without retraining the network
+maxsyllables = 12 # maximum syllables per line. Change this freely without retraining the network
 train_mode = False
 artist = "snoopdog" # used when saving the trained model
 rap_file = "neural_rap.txt" # where the rap is written to
